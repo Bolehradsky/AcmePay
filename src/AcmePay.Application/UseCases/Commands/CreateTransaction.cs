@@ -43,8 +43,6 @@ public static class CreateTransaction
 
         public async Task<Result> Handle(Contract contract, CancellationToken cancellationToken)
         {
-            /// U commands UseCase nemamo DTO (modele) za komunikaciju izmedju Application i Infrastructure,  kao sto je to U Query Usecasevima
-            /// Ovde se kreira objekat direktno u Domain i salju mu se parametri pojedinacno, isto vazi i za update
 
             var transaction = Transaction.Create(contract.Amount,
                                                        contract.Currency,
@@ -59,7 +57,7 @@ public static class CreateTransaction
 
             return new Result()
             {
-                Id = GuidEncryprion.ScrambleGuid(transaction.Id),
+                Id = EncryptGuid.Encrypt(transaction.Id),
                 OrderReference = transaction.OrderReference
             };
         }

@@ -1,4 +1,4 @@
-using AcmePay.Api.Exception;
+using _Common.Middleware;
 using AcmePay.Application.DependencyInjection;
 using AcmePay.Infrastructure.DependencyInjection;
 

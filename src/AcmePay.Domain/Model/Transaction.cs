@@ -29,8 +29,12 @@ public class Transaction : Entity<Guid>, IAuditable
         this.TransactionStatus = eTransactionStatus.ToString();
         this.CreatedAt = DateTime.Now;
         this.UpdatedAt = DateTime.Now;
+
     }
 
+    public Transaction()
+    {
+    }
 
     public static Transaction Create(decimal amount,
                                      string currency,
@@ -46,11 +50,23 @@ public class Transaction : Entity<Guid>, IAuditable
         CreditCardValidation(cardHolderNumber, cardHolderName, expirationMonth, expirationYear, cVV);
         MoneyValidation(amount, currency);
         OrderReferenceValidation(orderReference);
-        // TransactionStatus(eTransactionStatus);
+        TransactionStatusValidation(eTransactionStatus.ToString());
 
         return new Transaction(amount, currency, cardHolderNumber, cardHolderName, expirationMonth, expirationYear, cVV, orderReference, eTransactionStatus);
 
     }
+
+
+    public static void UpdateStatus(Transaction updatedTransaction, ETransactionStatus newStatus)
+    {
+        TransactionStatusValidation(newStatus.ToString());
+        updatedTransaction.TransactionStatus = newStatus.ToString();
+        updatedTransaction.UpdatedAt = DateTime.Now;
+
+    }
+
+
+
 
     public decimal Amount { get; set; }
     public string Currency { get; set; }

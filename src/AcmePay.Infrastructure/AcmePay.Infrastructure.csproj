@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AcmePay.Domain\AcmePay.Domain.csproj" />
+    <ProjectReference Include="..\_Common\_Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,9 @@
 ﻿using _Common.Exceptions;
+using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Text.Json;
 
-namespace AcmePay.Api.Exception
+namespace _Common.Middleware
 {
     public class ErrorHandler
     {
@@ -16,7 +17,7 @@ namespace AcmePay.Api.Exception
             {
                 await _next(context);
             }
-            catch (System.Exception error)
+            catch (Exception error)
             {
                 var response = context.Response;
                 response.ContentType = "application/json";
@@ -24,6 +25,8 @@ namespace AcmePay.Api.Exception
                 response.StatusCode = error switch
                 {
                     BusinessRuleValidationException => (int)HttpStatusCode.BadRequest,
+                    DatabaseException => (int)HttpStatusCode.InternalServerError,
+                    EntityNotFoundException => (int)HttpStatusCode.NotFound,
 
                     _ => (int)HttpStatusCode.InternalServerError,
                 };

@@ -2,8 +2,11 @@
 enum ECurrency
 {
     USD,
+    AUD,
+    CAD,
+    CZK,
     EUR,
-    CND,
     GBP,
+    JPY,
     RSD
 }
