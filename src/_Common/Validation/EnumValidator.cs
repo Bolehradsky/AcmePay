@@ -1,4 +1,4 @@
-﻿namespace _Common.Utils
+﻿namespace _Common.Validation
     ;
 
 public static class EnumValidator

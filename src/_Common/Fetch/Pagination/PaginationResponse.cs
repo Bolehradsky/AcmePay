@@ -1,14 +1,15 @@
-﻿namespace _Common.Fetch
+﻿namespace _Common.Fetch.Pagination
 {
     public class PaginationResponse<T> where T : class
     {
-        public PaginationResponse(int totalCount, int pageSize, int currentPageNumber, T data)
+
+        public PaginationResponse(int totalCount, int pageSize, int currentPageNumber, List<T> data)
         {
-            this.TotalCount = totalCount;
-            this.PageSize = pageSize;
-            this.CurrentPageNumber = currentPageNumber;
-            this.Data = data;
-            TotalPages = (int)Math.Ceiling((double)totalCount / (double)pageSize);
+            TotalCount = totalCount;
+            PageSize = pageSize;
+            CurrentPageNumber = currentPageNumber;
+            Data = data;
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
             HasPreviousPage = CurrentPageNumber > 1;
             HasNextPage = CurrentPageNumber < TotalPages;
         }
@@ -19,6 +20,6 @@
         public int TotalPages { get; set; }
         public bool HasPreviousPage { get; set; }
         public bool HasNextPage { get; set; }
-        public T Data { get; set; }
+        public List<T> Data { get; set; } = new(0);
     }
 }

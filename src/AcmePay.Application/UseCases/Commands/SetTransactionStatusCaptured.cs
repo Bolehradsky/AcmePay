@@ -6,7 +6,7 @@ using MediatR;
 
 namespace AcmePay.Application.UseCases.Commands;
 
-public static class SetTransactionStatusCaptured
+public static class SetTransactionStatusVoided
 {
 
     public sealed record Contract : IRequest<Result>
@@ -24,6 +24,7 @@ public static class SetTransactionStatusCaptured
     {
         private readonly ITransactionRepository _transactionRepository;
 
+
         public UseCase(ITransactionRepository transactionRepository)
         {
             _transactionRepository = transactionRepository;
@@ -32,8 +33,10 @@ public static class SetTransactionStatusCaptured
         public async Task<Result> Handle(Contract contract, CancellationToken cancellationToken)
         {
             var transaction = await _transactionRepository.GetById(EncryptGuid.Decrypt(contract.Id));
-            Transaction.UpdateStatus(transaction, ETransactionStatus.Captured);
+
+            Transaction.UpdateStatus(transaction, ETransactionStatus.Voided);
             await _transactionRepository.SetStatus(transaction);
+
             return new Result()
             {
                 Id = EncryptGuid.Encrypt(transaction.Id),

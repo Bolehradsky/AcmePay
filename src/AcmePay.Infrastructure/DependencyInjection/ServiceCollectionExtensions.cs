@@ -1,8 +1,10 @@
 ﻿using AcmePay.Domain.Repositories;
 using AcmePay.Infrastructure.Database;
+using AcmePay.Infrastructure.Queries;
 using AcmePay.Infrastructure.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using static AcmePay.Application.Persistence.Queries.ReadTransactionsModel;
 
 namespace AcmePay.Infrastructure.DependencyInjection
 {
@@ -19,6 +21,7 @@ namespace AcmePay.Infrastructure.DependencyInjection
             });
 
             services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<IReadTransactionsQuery, ReadTransactionsQuery>();
 
             return services;
         }

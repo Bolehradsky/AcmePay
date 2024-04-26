@@ -1,9 +1,11 @@
 using _Common.Middleware;
+using AcmePay.Api.DependencyInjection;
 using AcmePay.Application.DependencyInjection;
 using AcmePay.Infrastructure.DependencyInjection;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
 try
 {
 
@@ -13,11 +15,10 @@ try
     builder.Services.AddControllers();
 
     builder.Services
-          .AddApplicationLayer()
-          .AddInfrastructureLayer(builder.Configuration)
-           ;
-    // builder.Services.AddSingleton<ErrorHandler>();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            .AddPresentationLayer()
+            .AddApplicationLayer()
+            .AddInfrastructureLayer(builder.Configuration);
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
@@ -39,17 +40,11 @@ try
 
     app.Run();
 }
-catch (Exception ex)
+catch (Exception)
 {
-    Console.WriteLine(ex.Message);
-    //logger.Fatal("Service failed to start and threw {exception}", exception);
-    // Ako ovde javi ovu gresku
-    // Some services are not able to be constructed (Error while validating the service descriptor 'ServiceType:
-    // MediatR.IRequestHandler`2[Kobre.Services.Books.Application.UseCases.Commands.Book.CreateBook
-    // onda nisam registrovao nesto u dependency Injection naprimer
-    // services.AddScoped<IPublisherRepository, PublisherRepository>(); U Infrastructuri
+
 }
 finally
 {
-    // Log.CloseAndFlush();
+
 }

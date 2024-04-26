@@ -2,6 +2,7 @@
 using AcmePay.Domain.Enums;
 using AcmePay.Domain.Model;
 using AcmePay.Domain.Repositories;
+using Mapster;
 using MediatR;
 
 namespace AcmePay.Application.UseCases.Commands;
@@ -53,13 +54,11 @@ public static class CreateTransaction
                                                        contract.CVV,
                                                        contract.OrderReference,
                                                        contract.TransactionStatus);
-            await _transactionRepository.Create(transaction);
 
-            return new Result()
-            {
-                Id = EncryptGuid.Encrypt(transaction.Id),
-                OrderReference = transaction.OrderReference
-            };
+            await _transactionRepository.Create(transaction);
+            var result = transaction.Adapt<Result>();
+            result.Id = EncryptGuid.Encrypt(transaction.Id);
+            return result;
         }
     }
 }

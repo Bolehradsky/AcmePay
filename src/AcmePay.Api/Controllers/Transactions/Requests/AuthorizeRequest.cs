@@ -1,7 +1,7 @@
 ﻿using _Common.Validation;
 using System.ComponentModel.DataAnnotations;
 
-namespace AcmePay.Api.Controllers.Authorize.Requests;
+namespace AcmePay.Api.Controllers.Transactions.Requests;
 
 public class AuthorizeRequest
 {

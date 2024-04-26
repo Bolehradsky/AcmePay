@@ -1,4 +1,4 @@
-﻿namespace AcmePay.Api.Controllers.Authorize.Responses;
+﻿namespace AcmePay.Api.Controllers.Transactions.Responses;
 
 public class TransactionChangeStatusResponse
 {

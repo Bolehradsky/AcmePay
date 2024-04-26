@@ -1,20 +1,21 @@
 ﻿using _Common.Domain;
 using _Common.Exceptions;
-using _Common.Utils;
+using _Common.Validation;
 using AcmePay.Domain.Enums;
+using AcmePay.Domain.Validation;
 namespace AcmePay.Domain.Model;
 
 public class Transaction : Entity<Guid>, IAuditable
 {
     private Transaction(decimal amount,
-                       string currency,
-                       string cardHolderNumber,
-                       string cardHolderName,
-                       int expirationMonth,
-                       int expirationYear,
-                       int cVV,
-                       string orderReference,
-                       ETransactionStatus eTransactionStatus
+                        string currency,
+                        string cardHolderNumber,
+                        string cardHolderName,
+                        int expirationMonth,
+                        int expirationYear,
+                        int cVV,
+                        string orderReference,
+                        ETransactionStatus eTransactionStatus
                        )
     {
         this.Id = Guid.NewGuid();
@@ -29,7 +30,6 @@ public class Transaction : Entity<Guid>, IAuditable
         this.TransactionStatus = eTransactionStatus.ToString();
         this.CreatedAt = DateTime.Now;
         this.UpdatedAt = DateTime.Now;
-
     }
 
     public Transaction()
@@ -47,25 +47,35 @@ public class Transaction : Entity<Guid>, IAuditable
                                      ETransactionStatus eTransactionStatus)
     {
 
-        CreditCardValidation(cardHolderNumber, cardHolderName, expirationMonth, expirationYear, cVV);
-        MoneyValidation(amount, currency);
+        CreditCardValidation.Validate(cardHolderNumber, cardHolderName, expirationMonth, expirationYear, cVV);
+        MoneyValidation.Validate(amount, currency);
         OrderReferenceValidation(orderReference);
         TransactionStatusValidation(eTransactionStatus.ToString());
 
-        return new Transaction(amount, currency, cardHolderNumber, cardHolderName, expirationMonth, expirationYear, cVV, orderReference, eTransactionStatus);
+        return new Transaction(amount,
+                               currency,
+                               cardHolderNumber,
+                               cardHolderName,
+                               expirationMonth,
+                               expirationYear,
+                               cVV,
+                               orderReference,
+                               eTransactionStatus
+                               );
 
     }
 
 
-    public static void UpdateStatus(Transaction updatedTransaction, ETransactionStatus newStatus)
+    public static void UpdateStatus(Transaction transaction, ETransactionStatus newStatus)
     {
         TransactionStatusValidation(newStatus.ToString());
-        updatedTransaction.TransactionStatus = newStatus.ToString();
-        updatedTransaction.UpdatedAt = DateTime.Now;
-
+        if (transaction.TransactionStatus != ETransactionStatus.Authorized.ToString())
+        {
+            throw new BusinessRuleValidationException($"Transaction is already {transaction.TransactionStatus.ToString()}");
+        }
+        transaction.TransactionStatus = newStatus.ToString();
+        transaction.UpdatedAt = DateTime.Now;
     }
-
-
 
 
     public decimal Amount { get; set; }
@@ -88,26 +98,8 @@ public class Transaction : Entity<Guid>, IAuditable
         {
             throw new BusinessRuleValidationException("Card holder can not be Empty");
         }
-        // TODO check if orderreference is Unique
-        //if (transactionRepository.GetAsync(orderReference))
-        //{
-        //    throw new BusinessRuleValidationException("Order reference already exist");
-        //}
     }
 
-
-    private static void MoneyValidation(decimal ammount, string currency)
-    {
-        if (ammount <= 0)
-        {
-            throw new BusinessRuleValidationException("Ammount must greater then zero");
-        }
-
-        if (EnumValidator.IsStringInEnum<ECurrency>(currency) == false)
-        {
-            throw new BusinessRuleValidationException($"'{currency}' is not valid currency symbol.");
-        }
-    }
 
     private static void TransactionStatusValidation(string transactionStatus)
     {
@@ -117,79 +109,4 @@ public class Transaction : Entity<Guid>, IAuditable
             throw new BusinessRuleValidationException($"Transaction status '{transactionStatus}' does not exist");
         }
     }
-
-    #region CreditCardvalidation
-    private static void CreditCardValidation(string cardHolderNumber, string cardHolderName, int expirationMonth, int expirationYear, int cVV)
-    {
-        CreditCardNumberValidation(cardHolderNumber);
-
-        if (string.IsNullOrEmpty(cardHolderName))
-        {
-            throw new BusinessRuleValidationException("Card holder can not be Empty");
-        }
-
-        ExpirationDateValidation(expirationMonth, expirationYear);
-        CreditCardCvvValidation(cVV);
-    }
-
-    private static void CreditCardNumberValidation(string cardNumber)
-    {
-        if (string.IsNullOrEmpty(cardNumber))
-        {
-            throw new BusinessRuleValidationException("Card number can not be Empty");
-        }
-        cardNumber = cardNumber.Replace(" ", "").Replace("-", "");
-
-        if (!NumberUtils.IsNumeric(cardNumber) || cardNumber.Length < 13 || cardNumber.Length > 19)
-        {
-            throw new BusinessRuleValidationException("Credit CardNumber is not valid");
-        }
-
-        // Apply Luhn algorithm
-        int sum = 0;
-        bool alternate = false;
-        for (int i = cardNumber.Length - 1; i >= 0; i--)
-        {
-            int digit = int.Parse(cardNumber[i].ToString());
-
-            if (alternate)
-            {
-                digit *= 2;
-                if (digit > 9)
-                {
-                    digit -= 9;
-                }
-            }
-
-            sum += digit;
-            alternate = !alternate;
-        }
-
-        if (sum % 10 != 0)
-        {
-            throw new BusinessRuleValidationException("Credit CardNumber is not valid");
-        }
-    }
-
-
-
-    private static void ExpirationDateValidation(int expirationMonth, int expirationYear)
-    {
-        var expirationDate = new DateOnly(expirationYear, expirationMonth + 1, 1).AddDays(-1);
-
-        if (expirationDate < DateOnly.FromDateTime(DateTime.Now))
-        {
-            throw new BusinessRuleValidationException("Credit card date has expired");
-        }
-    }
-
-    private static void CreditCardCvvValidation(int cvv)
-    {
-        if (cvv.ToString().Length != 3)
-        {
-            throw new BusinessRuleValidationException("Credit card date has expired");
-        }
-    }
-    #endregion
-
 }
