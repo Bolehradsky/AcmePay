@@ -24,13 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Doman\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AcmePay.Application\AcmePay.Application.csproj" />
     <ProjectReference Include="..\AcmePay.Domain\AcmePay.Domain.csproj" />
     <ProjectReference Include="..\AcmePay.Infrastructure\AcmePay.Infrastructure.csproj" />
+    <ProjectReference Include="..\_Common\_Common.csproj" />
   </ItemGroup>
 
 </Project>
