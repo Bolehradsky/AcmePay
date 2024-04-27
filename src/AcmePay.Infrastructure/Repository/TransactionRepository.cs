@@ -15,10 +15,10 @@ public class TransactionRepository : ITransactionRepository
     }
 
 
-    public async Task Create(Domain.Model.Transaction transaction)
+    public async Task Authorize(Domain.Model.Transaction transaction)
     {
-        const string sql = @"INSERT INTO [dbo].[Transaction] (Id,Currency,Ammount,CardHolderName,CardHolderNumber,ExpirationMonth,ExpirationYear,CVV,OrderReference,TransactionStatus,CreatedAt,UpdatedAt) "
-                           + " values  (@Id,@Currency,@Amount,@CardHolderName,@CardHolderNumber,@ExpirationMonth,@ExpirationYear,@CVV,@OrderReference,@TransactionStatus,@CreatedAt,@UpdatedAt) ";
+        const string sql = @"INSERT INTO [dbo].[Transaction] (Id,Currency,Amount,CardHolderName,CardHolderNumber,ExpirationMonth,ExpirationYear,CVV,OrderReference,Status,CreatedAt,UpdatedAt) "
+                           + " values  (@Id,@Currency,@Amount,@CardHolderName,@CardHolderNumber,@ExpirationMonth,@ExpirationYear,@CVV,@OrderReference,@Status,@CreatedAt,@UpdatedAt) ";
 
         using var connection = _connectionProvider.Create();
         await connection.ExecuteAsync(sql, transaction);
@@ -37,12 +37,32 @@ public class TransactionRepository : ITransactionRepository
         return result;
     }
 
-    public async Task SetStatus(Domain.Model.Transaction transaction)
+    public async Task ChangeStatus(Domain.Model.Transaction originalTransaction, Domain.Model.Transaction changedTransaction)
     {
-        const string sql = @"UPDATE [dbo].[Transaction] SET TransactionStatus=@TransactionStatus where Id=@Id";
         using var connection = _connectionProvider.Create();
-        await connection.ExecuteAsync(sql, transaction);
+        connection.Open();
+        using (var dbTransaction = connection.BeginTransaction())
+        {
+            try
+            {
+                const string insertQuery = @"INSERT INTO [dbo].[Transaction] (Id,Currency,Amount,CardHolderName,CardHolderNumber,ExpirationMonth,ExpirationYear,CVV,OrderReference,Status,CreatedAt,UpdatedAt) "
+                            + " values  (@Id,@Currency,@Amount,@CardHolderName,@CardHolderNumber,@ExpirationMonth,@ExpirationYear,@CVV,@OrderReference,@Status,@CreatedAt,@UpdatedAt) ";
+                await connection.ExecuteAsync(insertQuery, changedTransaction, dbTransaction);
+
+                const string updateQuery = @"UPDATE [dbo].[Transaction] SET Status=@Status,UpdatedAt=@UpdatedAt where Id=@Id";
+                await connection.ExecuteAsync(updateQuery, originalTransaction, dbTransaction);
+
+                dbTransaction.Commit();
+            }
+            catch (Exception ex)
+            {
+
+                dbTransaction.Rollback();
+                throw new DatabaseException($"Error occured while updatig status : {ex.Message}");
+            }
+
+        }
+
+
     }
-
-
 }

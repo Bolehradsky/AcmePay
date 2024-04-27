@@ -1,9 +1,8 @@
 ﻿using _Common.Exceptions;
-using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Text.Json;
 
-namespace _Common.Middleware
+namespace AcmePay.Api.Midleware
 {
     public class ErrorHandler
     {

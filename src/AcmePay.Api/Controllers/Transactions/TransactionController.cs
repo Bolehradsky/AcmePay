@@ -27,7 +27,7 @@ public class TransactionController : ControllerBase
     public async Task<IActionResult> AuthorizeTransaction(
     [FromBody] AuthorizeRequest request)
     {
-        var useCaseContract = request.Adapt<CreateTransaction.Contract>();
+        var useCaseContract = request.Adapt<AuthorizeTransaction.Contract>();
         var useCaseResponse = await _sender.Send(useCaseContract);
         return this.Ok(useCaseResponse.Adapt<AuthorizeResponse>());
     }
@@ -41,7 +41,7 @@ public class TransactionController : ControllerBase
         [FromBody] TransactionChangeStatusRequest request,
         [FromRoute] string id)
     {
-        var useCaseContract = new SetTransactionStatusVoided.Contract
+        var useCaseContract = new VoidTransaction.Contract
         {
             Id = id,
             OrderReference = request.OrderReference,
@@ -60,7 +60,7 @@ public class TransactionController : ControllerBase
        [FromBody] TransactionChangeStatusRequest request,
        [FromRoute] string id)
     {
-        var useCaseContract = new SetTransactionStatusCaptured.Contract
+        var useCaseContract = new CaptureTransaction.Contract
         {
             Id = id,
             OrderReference = request.OrderReference,

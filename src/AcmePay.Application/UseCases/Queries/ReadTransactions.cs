@@ -1,4 +1,5 @@
 ﻿using _Common.Fetch.Pagination;
+using _Common.Utils;
 using Mapster;
 using MediatR;
 using static AcmePay.Application.Persistence.Queries.ReadTransactionsModel;
@@ -27,7 +28,7 @@ public static class ReadTransactions
         public string Currency { get; set; } = string.Empty;
         public string CardHolderNumber { get; set; } = string.Empty;
         public string CardHolderName { get; set; } = string.Empty;
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Status { get; set; } = string.Empty;
     }
 
@@ -44,7 +45,17 @@ public static class ReadTransactions
         {
             var modelRequest = contract.Adapt<RequestModel>();
             var modelResult = await _readTransactionsQuery.Execute(modelRequest);
-            return modelResult.Adapt<Result>();
+
+            var resultData = new List<ReadTransactionResult>();
+            foreach (var item in modelResult.Data)
+            {
+                var resultItem = item.Adapt<ReadTransactionResult>();
+                resultItem.Id = EncryptGuid.Encrypt(item.Id);
+                resultData.Add(resultItem);
+            }
+
+            var result = new Result(modelResult.TotalCount, modelResult.PageSize, modelResult.CurrentPageNumber, resultData);
+            return result;
         }
     }
 

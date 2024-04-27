@@ -3,7 +3,7 @@
 namespace AcmePay.Domain.Repositories;
 public interface ITransactionRepository
 {
-    Task Create(Transaction transaction);
-    Task SetStatus(Transaction transaction);
+    Task Authorize(Transaction transaction);
+    Task ChangeStatus(Transaction orginalTransaction, Transaction changedTransaction);
     Task<Transaction> GetById(Guid id);
 }

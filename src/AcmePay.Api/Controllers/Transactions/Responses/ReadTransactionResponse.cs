@@ -6,7 +6,7 @@
         public string Currency { get; set; } = string.Empty;
         public string CardHolderNumber { get; set; } = string.Empty;
         public string CardHolderName { get; set; } = string.Empty;
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public string Status { get; set; } = string.Empty;
     }
 }

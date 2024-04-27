@@ -1,10 +1,16 @@
-using _Common.Middleware;
 using AcmePay.Api.DependencyInjection;
+using AcmePay.Api.Midleware;
 using AcmePay.Application.DependencyInjection;
 using AcmePay.Infrastructure.DependencyInjection;
+using Serilog;
 
 
 var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+.ReadFrom.Configuration(builder.Configuration)
+           .CreateLogger();
+
+Log.Information("Starting web host");
 
 try
 {
@@ -43,8 +49,9 @@ try
 catch (Exception)
 {
 
+    Log.Information("Starting web host");
 }
 finally
 {
-
+    Log.CloseAndFlush();
 }

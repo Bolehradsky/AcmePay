@@ -1,23 +1,22 @@
 ﻿USE [acme01]
 GO
-/****** Object:  Table [dbo].[Transaction]    Script Date: 4/25/2024 10:42:06 AM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Transaction](
 	[Id] [uniqueidentifier] NOT NULL,
-	[Currency] [varchar](50) NOT NULL,
-	[Ammount] [decimal](18, 2) NOT NULL,
+	[Currency] [nvarchar](3) NOT NULL,
+	[Amount] [decimal](18, 2) NOT NULL,
 	[CardHolderName] [varchar](50) NOT NULL,
 	[CardHolderNumber] [nchar](25) NOT NULL,
 	[ExpirationMonth] [smallint] NOT NULL,
 	[ExpirationYear] [smallint] NOT NULL,
 	[Cvv] [smallint] NOT NULL,
 	[OrderReference] [varchar](50) NULL,
-	[TransactionStatus] [varchar](25) NULL,
-	[CreatedAt] [datetimeoffset](2) NULL,
-	[UpdatedAt] [datetimeoffset](2) NULL
+	[Status] [varchar](25) NULL,
+	[CreatedAt] [datetime] NULL,
+	[UpdatedAt] [datetime] NULL
 ) ON [PRIMARY]
 GO
 USE [master]

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace AcmePay.Application.UseCases.Commands;
 
-public static class CreateTransaction
+public static class AuthorizeTransaction
 {
 
 
@@ -21,7 +21,7 @@ public static class CreateTransaction
         public int ExpirationYear { get; set; }
         public int CVV { get; set; }
         public string OrderReference { get; set; } = string.Empty;
-        public ETransactionStatus TransactionStatus { get; set; }
+        public ETransactionStatus Status { get; set; }
     }
 
     public sealed record Result
@@ -53,9 +53,9 @@ public static class CreateTransaction
                                                        contract.ExpirationYear,
                                                        contract.CVV,
                                                        contract.OrderReference,
-                                                       contract.TransactionStatus);
+                                                       contract.Status);
 
-            await _transactionRepository.Create(transaction);
+            await _transactionRepository.Authorize(transaction);
             var result = transaction.Adapt<Result>();
             result.Id = EncryptGuid.Encrypt(transaction.Id);
             return result;

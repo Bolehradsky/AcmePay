@@ -27,7 +27,7 @@ public class Transaction : Entity<Guid>, IAuditable
         this.ExpirationYear = expirationYear;
         this.CVV = cVV;
         this.OrderReference = orderReference;
-        this.TransactionStatus = eTransactionStatus.ToString();
+        this.Status = eTransactionStatus.ToString();
         this.CreatedAt = DateTime.Now;
         this.UpdatedAt = DateTime.Now;
     }
@@ -69,11 +69,11 @@ public class Transaction : Entity<Guid>, IAuditable
     public static void UpdateStatus(Transaction transaction, ETransactionStatus newStatus)
     {
         TransactionStatusValidation(newStatus.ToString());
-        if (transaction.TransactionStatus != ETransactionStatus.Authorized.ToString())
+        if (transaction.Status != ETransactionStatus.Authorized.ToString())
         {
-            throw new BusinessRuleValidationException($"Transaction is already {transaction.TransactionStatus.ToString()}");
+            throw new BusinessRuleValidationException($"Transaction is already {transaction.Status.ToString()}");
         }
-        transaction.TransactionStatus = newStatus.ToString();
+        transaction.Status = newStatus.ToString();
         transaction.UpdatedAt = DateTime.Now;
     }
 
@@ -86,7 +86,7 @@ public class Transaction : Entity<Guid>, IAuditable
     public int ExpirationYear { get; set; }
     public int CVV { get; set; }
     public string OrderReference { get; set; } = string.Empty;
-    public string TransactionStatus { get; set; }
+    public string Status { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
