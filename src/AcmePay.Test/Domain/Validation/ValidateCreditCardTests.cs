@@ -13,14 +13,14 @@ public class ValidateCreditCardTests
     public async Task CreateAuthorizedTransaction_Succeed()
     {
         // Arrange
-        var CardHolderName = "Mark Knopfler";
-        var CardHolderNumber = CreditCardNumbers.GeRandomCreditcard();
-        var ExpirationMonth = 1;
-        var ExpirationYear = 2031;
-        var CVV = 387;
+        var cardHolderName = "Mark Knopfler";
+        var cardHolderNumber = CreditCardNumbers.GeRandomCreditcard();
+        var eExpirationMonth = 1;
+        var expirationYear = 2031;
+        var cVv = 387;
 
         // Act
-        var exception = Record.Exception(() => CreditCardValidation.Validate(CardHolderNumber, CardHolderName, ExpirationMonth, ExpirationYear, CVV));
+        var exception = Record.Exception(() => CreditCardValidation.Validate(cardHolderNumber, cardHolderName, eExpirationMonth, expirationYear, cVv));
 
         // Assert
         Assert.Null(exception);
@@ -31,14 +31,14 @@ public class ValidateCreditCardTests
     public async Task CreateAuthorizedTransaction_ThrowsBussinesRulevaidationException_WhenCardHoldernameIsEmpty()
     {
         // Arrange
-        var CardHolderName = "";
-        var CardHolderNumber = CreditCardNumbers.GeRandomCreditcard();
-        var ExpirationMonth = 1;
-        var ExpirationYear = 2031;
-        var CVV = 387;
+        var cardHolderName = "";
+        var cardHolderNumber = CreditCardNumbers.GeRandomCreditcard();
+        var expirationMonth = 1;
+        var expirationYear = 2031;
+        var cVv = 387;
 
         // Act
-        var validateAction = () => CreditCardValidation.Validate(CardHolderNumber, CardHolderName, ExpirationMonth, ExpirationYear, CVV);
+        var validateAction = () => CreditCardValidation.Validate(cardHolderNumber, cardHolderName, expirationMonth, expirationYear, cVv);
 
         // Assert
         Assert.Throws<BusinessRuleValidationException>(validateAction);
