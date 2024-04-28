@@ -14,10 +14,6 @@ Log.Information("Starting web host");
 
 try
 {
-
-
-    // Add services to the container.
-
     builder.Services.AddControllers();
 
     builder.Services
@@ -48,7 +44,6 @@ try
 }
 catch (Exception)
 {
-
     Log.Information("Starting web host");
 }
 finally

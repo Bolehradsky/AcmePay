@@ -19,7 +19,7 @@ public class TransactionRepository : GenericRepository<Transaction, Guid>, ITran
 
     public async Task Authorize(Transaction transaction)
     {
-        base.Add(transaction);
+        await base.Add(transaction);
     }
 
     public async Task ChangeStatus(Domain.Model.Transaction originalTransaction, Domain.Model.Transaction changedTransaction)

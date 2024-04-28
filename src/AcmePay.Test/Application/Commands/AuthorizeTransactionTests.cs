@@ -4,7 +4,7 @@ using AcmePay.Domain.Repositories;
 using AcmePay.Test.Fixtures;
 using Moq;
 
-namespace AcmePay.Test.Application;
+namespace AcmePay.Test.Application.Commands;
 
 public class AuthorizeTransactionTests
 {

@@ -79,14 +79,14 @@ public class Transaction : Entity<Guid>, IAuditable
 
 
     public decimal Amount { get; set; }
-    public string Currency { get; set; }
-    public string CardHolderNumber { get; set; }
-    public string CardHolderName { get; set; }
+    public string Currency { get; set; } = string.Empty;
+    public string CardHolderNumber { get; set; } = string.Empty;
+    public string CardHolderName { get; set; } = string.Empty;
     public int ExpirationMonth { get; set; }
     public int ExpirationYear { get; set; }
     public int CVV { get; set; }
     public string OrderReference { get; set; } = string.Empty;
-    public string Status { get; set; }
+    public string Status { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 

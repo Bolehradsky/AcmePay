@@ -7,7 +7,6 @@ public static class EncryptGuid
 {
     private static readonly byte[] Key = Encoding.UTF8.GetBytes("1234567890123456"); // 16 characters for AES128, 24 characters for AES192, 32 characters for AES256
     private static readonly byte[] IV = Encoding.UTF8.GetBytes("1234567890123456"); // Initialization vector (IV) is important for security
-
     public static string Encrypt(Guid guid)
     {
         using (Aes aesAlg = Aes.Create())
@@ -33,11 +32,8 @@ public static class EncryptGuid
 
     public static Guid Decrypt(string encryptedGuid)
     {
-
         encryptedGuid = encryptedGuid.Replace("%2B", "+");
         encryptedGuid = encryptedGuid.Replace("%2F", "/");
-
-
 
         using (Aes aesAlg = Aes.Create())
         {

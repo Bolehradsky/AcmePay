@@ -10,7 +10,7 @@ namespace AcmePay.Test.Domain.Validation
         [InlineData("Voided")]
         [InlineData("Captured")]
 
-        public async Task TransactionStatusValidation_Succeed(string transactionStatus)
+        public void TransactionStatusValidation_Succeed(string transactionStatus)
         {
             // Act
             var exception = Record.Exception(() => AcmePay.Domain.Model.Transaction.TransactionStatusValidation(transactionStatus));
@@ -20,7 +20,7 @@ namespace AcmePay.Test.Domain.Validation
         }
 
         [Fact]
-        public async Task TransactionStatusValidation_ThrwsBussinesRuleValidationException_ForUnknownTransactioStatus()
+        public void TransactionStatusValidation_ThrwsBussinesRuleValidationException_ForUnknownTransactioStatus()
         {
             // Arrange
             var transactionStatus = "NotExist";

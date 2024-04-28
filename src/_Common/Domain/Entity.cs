@@ -15,12 +15,12 @@ public abstract class Entity<TId>
 {
     protected Entity(TId id)
     {
-        Id = id;
+        this.Id = id;
     }
 
     protected Entity()
     {
-        Id = default!;
+        this.Id = default!;
     }
 
     public TId Id { get; protected set; }
@@ -42,12 +42,12 @@ public abstract class Entity<TId>
             return false;
         }
 
-        if (IsTransient() || other.IsTransient())
+        if (this.IsTransient() || other.IsTransient())
         {
             return false;
         }
 
-        return Id!.Equals(other.Id);
+        return this.Id!.Equals(other.Id);
     }
 
     public static bool operator ==(Entity<TId>? a, Entity<TId>? b)
@@ -78,6 +78,6 @@ public abstract class Entity<TId>
 
     private bool IsTransient()
     {
-        return Id is null || Id.Equals(default(TId));
+        return this.Id is null || this.Id.Equals(default(TId));
     }
 }

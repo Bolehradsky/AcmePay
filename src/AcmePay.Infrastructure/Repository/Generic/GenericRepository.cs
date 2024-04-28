@@ -23,17 +23,17 @@ namespace AcmePay.Infrastructure.Repository.Generics
             _connection = connectionProvider.GetConnection();
         }
 
-        public bool Add(T entity)
+        public async Task<bool> Add(T entity)
         {
             int rowsEffected = 0;
             try
             {
-                string tableName = GetTableName();
-                string columns = GetColumns(excludeKey: true);
-                string properties = GetPropertyNames(excludeKey: true);
+                string tableName = this.GetTableName();
+                string columns = this.GetColumns(excludeKey: true);
+                string properties = this.GetPropertyNames(excludeKey: true);
                 string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
 
-                rowsEffected = _connection.Execute(query, entity);
+                rowsEffected = await _connection.ExecuteAsync(query, entity);
             }
             catch (Exception exception)
             {
@@ -42,17 +42,17 @@ namespace AcmePay.Infrastructure.Repository.Generics
             return rowsEffected > 0 ? true : false;
         }
 
-        public bool Delete(T entity)
+        public async Task<bool> Delete(T entity)
         {
             int rowsEffected = 0;
             try
             {
-                string tableName = GetTableName();
+                string tableName = this.GetTableName();
                 string keyColumn = GetKeyColumnName();
-                string keyProperty = GetKeyPropertyName();
+                string keyProperty = this.GetKeyPropertyName();
                 string query = $"DELETE FROM {tableName} WHERE Id = @{keyProperty}";
 
-                rowsEffected = _connection.Execute(query, entity);
+                rowsEffected = await _connection.ExecuteAsync(query, entity);
             }
             catch (Exception exception)
             {
@@ -64,10 +64,10 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
         public IEnumerable<T> GetAll()
         {
-            IEnumerable<T> result = null;
+            IEnumerable<T>? result = null;
             try
             {
-                string tableName = GetTableName();
+                string tableName = this.GetTableName();
                 string query = $"SELECT * FROM {tableName}";
 
                 result = _connection.Query<T>(query);
@@ -82,10 +82,10 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
         public async Task<T> GetById(TId Id)
         {
-            T result = null;
+            T? result = null;
             try
             {
-                string tableName = GetTableName();
+                string tableName = this.GetTableName();
                 string keyColumn = GetKeyColumnName();
                 string query = $"SELECT * FROM {tableName} WHERE  Id = '{Id}'";
                 result = await _connection.QueryFirstOrDefaultAsync<T>(query, new { Id = Id.ToString() });
@@ -101,14 +101,14 @@ namespace AcmePay.Infrastructure.Repository.Generics
             return result;
         }
 
-        public bool Update(T entity)
+        public async Task<bool> Update(T entity)
         {
             int rowsEffected = 0;
             try
             {
-                string tableName = GetTableName();
+                string tableName = this.GetTableName();
                 string keyColumn = GetKeyColumnName();
-                string keyProperty = GetKeyPropertyName();
+                string keyProperty = this.GetKeyPropertyName();
 
                 StringBuilder query = new StringBuilder();
                 query.Append($"UPDATE {tableName} SET ");
@@ -123,7 +123,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
                 query.Append($" WHERE Id = @Id");
 
-                rowsEffected = _connection.Execute(query.ToString(), entity);
+                rowsEffected = await _connection.ExecuteAsync(query.ToString(), entity);
             }
             catch (Exception exception)
             {
@@ -147,7 +147,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
             return $"[{type.Name}]";
         }
 
-        public static string GetKeyColumnName()
+        public static string? GetKeyColumnName()
         {
             PropertyInfo[] properties = typeof(T).GetProperties();
 
@@ -161,8 +161,8 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
                     if (columnAttributes != null && columnAttributes.Length > 0)
                     {
-                        ColumnAttribute columnAttribute = (ColumnAttribute)columnAttributes[0];
-                        return columnAttribute.Name;
+                        ColumnAttribute? columnAttribute = (ColumnAttribute)columnAttributes[0];
+                        return columnAttribute!.Name;
                     }
                     else
                     {
@@ -212,7 +212,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
             return properties;
         }
 
-        protected string GetKeyPropertyName()
+        protected string? GetKeyPropertyName()
         {
             var properties = typeof(T).GetProperties()
                 .Where(p => p.GetCustomAttribute<KeyAttribute>() != null);

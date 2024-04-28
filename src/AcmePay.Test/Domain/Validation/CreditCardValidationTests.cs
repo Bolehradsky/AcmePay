@@ -10,7 +10,7 @@ public class CreditCardValidationTests
 
 
     [Fact]
-    public async Task CreateAuthorizedTransaction_Succeed()
+    public void CreateAuthorizedTransaction_Succeed()
     {
         // Arrange
         var cardHolderName = "Mark Knopfler";
@@ -28,7 +28,7 @@ public class CreditCardValidationTests
 
 
     [Fact]
-    public async Task CreateAuthorizedTransaction_ThrowsBussinesRulevaidationException_WhenCardHolderNameIsEmpty()
+    public void CreateAuthorizedTransaction_ThrowsBussinesRulevaidationException_WhenCardHolderNameIsEmpty()
     {
         // Arrange
         var cardHolderName = "";

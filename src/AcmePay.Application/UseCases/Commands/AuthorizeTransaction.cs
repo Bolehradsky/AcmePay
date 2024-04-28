@@ -9,8 +9,6 @@ namespace AcmePay.Application.UseCases.Commands;
 
 public static class AuthorizeTransaction
 {
-
-
     public sealed record Contract : IRequest<Result>
     {
         public decimal Amount { get; set; }

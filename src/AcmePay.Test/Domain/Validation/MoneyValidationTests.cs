@@ -17,7 +17,7 @@ namespace AcmePay.Test.Domain.Validation
         [InlineData("GBP")]
         [InlineData("JPY")]
 
-        public async Task CurrencyValidation_Succeed(string currency)
+        public void CurrencyValidation_Succeed(string currency)
         {  // Arrange
             var cardHolderNumber = CreditCardNumbers.GeRandomCreditcard();
 
@@ -29,7 +29,7 @@ namespace AcmePay.Test.Domain.Validation
         }
 
         [Fact]
-        public async Task CurrencyValidation_ThrwsBussinesRuleValidationException_ForUnknownCurrencyCode()
+        public void CurrencyValidation_ThrwsBussinesRuleValidationException_ForUnknownCurrencyCode()
         {
             var cardHolderNumber = CreditCardNumbers.GeRandomCreditcard();
             var currency = "ABC";

@@ -7,7 +7,7 @@ public static class ReadTransactionsModel
 
     public sealed class RequestModel
     {
-        public PaginationRequest PaginationRequest { get; set; } = default;
+        public PaginationRequest? PaginationRequest { get; set; } = default;
 
     }
     public sealed class ResponseModel : PaginationResponse<ReadTransactionModel>

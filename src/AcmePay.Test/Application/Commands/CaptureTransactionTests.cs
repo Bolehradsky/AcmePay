@@ -5,7 +5,7 @@ using AcmePay.Domain.Enums;
 using AcmePay.Infrastructure.Repository;
 using AcmePay.Test.Fixtures;
 
-namespace AcmePay.Test.Application;
+namespace AcmePay.Test.Application.Commands;
 
 public class CaptureTransactionTests
 {
