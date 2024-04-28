@@ -13,18 +13,7 @@ public class CaptureTransactionTests
     public async Task CaptureTransaction_Succeed()
     {
         // Arrange
-        var orderReference = $"Test order reference {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")} ";
-        var contractAuthorize = new AuthorizeTransaction.Contract
-        {
-            Amount = 1023.12M,
-            Currency = "USD",
-            CardHolderName = "Bob Marley",
-            CardHolderNumber = CreditCardNumbers.GeRandomCreditcard(),
-            ExpirationMonth = 12,
-            ExpirationYear = 2030,
-            CVV = 456,
-            OrderReference = orderReference
-        };
+        var contractAuthorize = TransactionAuthorizeRequest.Get;
         var repository = new TransactionRepository(ConnectionProvider.Connect());
 
         // Act
@@ -33,14 +22,14 @@ public class CaptureTransactionTests
         var contractCapture = new CaptureTransaction.Contract
         {
             Id = resultAuthorize.Id,
-            OrderReference = orderReference
+            OrderReference = contractAuthorize.OrderReference
         };
         var resultCapture = await new CaptureTransaction.UseCase(repository).Handle(contractCapture, CancellationToken.None);
 
         // Assert
         Assert.NotNull(resultAuthorize);
         Assert.NotNull(resultCapture);
-        Assert.Equal(orderReference, resultAuthorize.OrderReference);
+        Assert.Equal(contractAuthorize.OrderReference, resultAuthorize.OrderReference);
         Assert.Equal(ETransactionStatus.Captured.ToString(), resultCapture.Status);
     }
 
@@ -48,18 +37,7 @@ public class CaptureTransactionTests
     public async Task CaptureTransaction_ThrowsEntityNotFoundException_WhenIdInCaptureRequestIsInvalid()
     {
         // Arrange
-        var orderReference = $"Test order reference {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")} ";
-        var contractAuthorize = new AuthorizeTransaction.Contract
-        {
-            Amount = 1023.12M,
-            Currency = "USD",
-            CardHolderName = "Bob Marley",
-            CardHolderNumber = CreditCardNumbers.GeRandomCreditcard(),
-            ExpirationMonth = 12,
-            ExpirationYear = 2030,
-            CVV = 456,
-            OrderReference = orderReference
-        };
+        var contractAuthorize = TransactionAuthorizeRequest.Get;
         var repository = new TransactionRepository(ConnectionProvider.Connect());
 
         // Act
@@ -68,11 +46,33 @@ public class CaptureTransactionTests
         var contractCapture = new CaptureTransaction.Contract
         {
             Id = EncryptGuid.Encrypt(Guid.NewGuid()),
-            OrderReference = orderReference
+            OrderReference = contractAuthorize.OrderReference
         };
 
         // Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(async () => await new CaptureTransaction.UseCase(repository).Handle(contractCapture, CancellationToken.None));
+
+    }
+
+    [Fact]
+    public async Task CaptureTransaction_ThrowsBussinesRuleValidationException_TransactionStatusIcNotAuthorizedAlreadyCapturedWhenIdInCaptureRequestIsInvalid()
+    {
+        // Arrange
+        var contractAuthorize = TransactionAuthorizeRequest.Get;
+        var repository = new TransactionRepository(ConnectionProvider.Connect());
+
+        // Act
+        var resultAuthorize = await new AuthorizeTransaction.UseCase(repository).Handle(contractAuthorize, CancellationToken.None);
+
+        var contractCapture = new CaptureTransaction.Contract
+        {
+            Id = resultAuthorize.Id,
+            OrderReference = contractAuthorize.OrderReference
+        };
+
+        var firsCaptureResult = await new CaptureTransaction.UseCase(repository).Handle(contractCapture, CancellationToken.None);
+        // Assert
+        await Assert.ThrowsAsync<BusinessRuleValidationException>(async () => await new CaptureTransaction.UseCase(repository).Handle(contractCapture, CancellationToken.None));
 
     }
 

@@ -4,7 +4,7 @@ using AcmePay.Test.Fixtures;
 
 namespace AcmePay.Test.Domain.Validation;
 
-public class ValidateCreditCardTests
+public class CreditCardValidationTests
 {
 
 
@@ -28,7 +28,7 @@ public class ValidateCreditCardTests
 
 
     [Fact]
-    public async Task CreateAuthorizedTransaction_ThrowsBussinesRulevaidationException_WhenCardHoldernameIsEmpty()
+    public async Task CreateAuthorizedTransaction_ThrowsBussinesRulevaidationException_WhenCardHolderNameIsEmpty()
     {
         // Arrange
         var cardHolderName = "";

@@ -101,7 +101,7 @@ public class Transaction : Entity<Guid>, IAuditable
     }
 
 
-    private static void TransactionStatusValidation(string transactionStatus)
+    public static void TransactionStatusValidation(string transactionStatus)
     {
 
         if (EnumValidator.IsStringInEnum<ETransactionStatus>(transactionStatus) == false)
