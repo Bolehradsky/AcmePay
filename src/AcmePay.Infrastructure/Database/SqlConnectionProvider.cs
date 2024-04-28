@@ -11,7 +11,7 @@ namespace AcmePay.Infrastructure.Database
             this.connectioString = connectioString;
         }
 
-        public SqlConnection Create()
+        public SqlConnection GetConnection()
         {
             return new SqlConnection(connectioString);
         }

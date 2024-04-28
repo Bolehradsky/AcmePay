@@ -8,8 +8,6 @@ namespace AcmePay.Test.Application;
 
 public class AuthorizeTransactionTests
 {
-
-
     [Fact]
     public async Task CreateAuthorizedTransaction_Succeed()
     {

@@ -23,7 +23,7 @@ namespace AcmePay.Infrastructure.Queries
             const string sql = @"
                                SELECT Count(*) FROM  [dbo].[Transaction] 
                                SELECT * FROM  [dbo].[Transaction] Order by CreatedAt OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY";
-            using var connection = _connectionProvider.Create();
+            using var connection = _connectionProvider.GetConnection();
             var result = connection.QueryMultiple(sql, new { Skip = skip, Take = take });
 
             int totalCount = result.Read<int>().FirstOrDefault();
