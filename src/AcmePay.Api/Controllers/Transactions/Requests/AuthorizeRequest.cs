@@ -1,4 +1,4 @@
-﻿using _Common.Validation;
+﻿using _Common.Api.CustomAttributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace AcmePay.Api.Controllers.Transactions.Requests;

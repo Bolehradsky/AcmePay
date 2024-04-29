@@ -7,7 +7,7 @@ using Dapper;
 
 namespace AcmePay.Infrastructure.Repository;
 
-public class TransactionRepository : GenericRepository<Transaction, Guid>, ITransactionRepository
+public class TransactionRepository : DapperGenericRepository<Transaction, Guid>, ITransactionRepository
 {
 
     private readonly SqlConnectionProvider _connectionProvider;

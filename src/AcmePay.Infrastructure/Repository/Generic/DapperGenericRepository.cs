@@ -11,7 +11,7 @@ using static Dapper.SqlMapper;
 
 namespace AcmePay.Infrastructure.Repository.Generics
 {
-    public class GenericRepository<T, TId> : IGenericRepository<T, TId>
+    public class DapperGenericRepository<T, TId> : IGenericRepository<T, TId>
         where T : class
         where TId : struct, IEquatable<TId>
     {
@@ -19,7 +19,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
 
 
-        public GenericRepository(SqlConnectionProvider connectionProvider)
+        public DapperGenericRepository(SqlConnectionProvider connectionProvider)
         {
             _connection = connectionProvider.GetConnection();
         }

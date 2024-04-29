@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace _Common.Validation
+namespace _Common.Api.CustomAttributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class CurrencyCodeAttribute : ValidationAttribute
@@ -32,7 +32,7 @@ namespace _Common.Validation
                 return ValidationResult.Success;
             }
 
-            return new ValidationResult(this.FormatErrorMessage(stateCode));
+            return new ValidationResult(FormatErrorMessage(stateCode));
         }
     }
 
