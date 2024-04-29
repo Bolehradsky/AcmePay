@@ -5,8 +5,6 @@ namespace _Common.Api.CustomAttributes
     [AttributeUsage(AttributeTargets.Property)]
     public class CurrencyCodeAttribute : ValidationAttribute
     {
-
-
         private static readonly string[] ValidCurrencyCodes =
         {
         "USD",
