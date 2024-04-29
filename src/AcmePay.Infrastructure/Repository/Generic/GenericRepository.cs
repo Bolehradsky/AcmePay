@@ -1,4 +1,5 @@
 ﻿using _Common.Exceptions;
+using _Common.Infrastructure.Repository;
 using AcmePay.Infrastructure.Database;
 using Dapper;
 using System.ComponentModel.DataAnnotations;

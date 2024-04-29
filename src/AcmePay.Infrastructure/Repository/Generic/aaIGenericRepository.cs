@@ -1,6 +1,6 @@
 ﻿namespace AcmePay.Infrastructure.Repository.Generics
 {
-    public interface IGenericRepository<T, TId> where T : class where TId : struct, IEquatable<TId>
+    public interface aaIGenericRepository<T, TId> where T : class where TId : struct, IEquatable<TId>
     {
         Task<bool> Add(T entity);
         Task<bool> Delete(T entity);
