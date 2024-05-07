@@ -6,9 +6,6 @@ namespace AcmePay.Test.Domain.Validation;
 
 public class CreditCardValidationTests
 {
-
-
-
     [Fact]
     public void CreateAuthorizedTransaction_Succeed()
     {

@@ -31,21 +31,21 @@ public static class CaptureTransaction
 
         public async Task<Result> Handle(Contract contract, CancellationToken cancellationToken)
         {
-            var orginalTransaction = await _transactionRepository.GetById(EncryptGuid.Decrypt(contract.Id));
+            var authorizedTransaction = await _transactionRepository.GetById(EncryptGuid.Decrypt(contract.Id));
 
-            Transaction.UpdateStatus(orginalTransaction, ETransactionStatus.Captured);
+            Transaction.UpdateStatus(authorizedTransaction, ETransactionStatus.Captured);
 
-            var capturedTransaction = Transaction.Create(orginalTransaction.Amount,
-                                                      orginalTransaction.Currency,
-                                                      orginalTransaction.CardHolderNumber,
-                                                      orginalTransaction.CardHolderName,
-                                                      orginalTransaction.ExpirationMonth,
-                                                      orginalTransaction.ExpirationYear,
-                                                      orginalTransaction.CVV,
-                                                      orginalTransaction.OrderReference,
+            var capturedTransaction = Transaction.Create(authorizedTransaction.Amount,
+                                                      authorizedTransaction.Currency,
+                                                      authorizedTransaction.CardHolderNumber,
+                                                      authorizedTransaction.CardHolderName,
+                                                      authorizedTransaction.ExpirationMonth,
+                                                      authorizedTransaction.ExpirationYear,
+                                                      authorizedTransaction.CVV,
+                                                      authorizedTransaction.OrderReference,
                                                       ETransactionStatus.Captured);
 
-            await _transactionRepository.ChangeStatus(orginalTransaction, capturedTransaction);
+            await _transactionRepository.ChangeStatus(authorizedTransaction, capturedTransaction);
             return new Result()
             {
                 Id = EncryptGuid.Encrypt(capturedTransaction.Id),
