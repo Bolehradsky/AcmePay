@@ -31,7 +31,7 @@ public static class CaptureTransaction
 
         public async Task<Result> Handle(Contract contract, CancellationToken cancellationToken)
         {
-            var authorizedTransaction = await _transactionRepository.GetById(EncryptGuid.Decrypt(contract.Id));
+            var authorizedTransaction = await _transactionRepository.GetById(EncryptGuid.GetInstance().Decrypt(contract.Id));
 
             Transaction.UpdateStatus(authorizedTransaction, ETransactionStatus.Captured);
 
@@ -48,7 +48,7 @@ public static class CaptureTransaction
             await _transactionRepository.ChangeStatus(authorizedTransaction, capturedTransaction);
             return new Result()
             {
-                Id = EncryptGuid.Encrypt(capturedTransaction.Id),
+                Id = EncryptGuid.GetInstance().Encrypt(capturedTransaction.Id),
                 Status = capturedTransaction.Status
             };
         }

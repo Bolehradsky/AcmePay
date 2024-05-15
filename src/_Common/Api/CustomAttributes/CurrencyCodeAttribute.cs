@@ -18,21 +18,18 @@ namespace _Common.Api.CustomAttributes
         };
 
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
-        {
-            var stateCode = value?.ToString()?.ToUpperInvariant();
-            if (string.IsNullOrWhiteSpace(stateCode))
             {
-                return ValidationResult.Success;
-            }
+            var currencyCode = value?.ToString()?.ToUpperInvariant();
 
-            if (ValidCurrencyCodes.Contains(stateCode))
-            {
-                return ValidationResult.Success;
-            }
 
-            return new ValidationResult(FormatErrorMessage(stateCode));
+            if (ValidCurrencyCodes.Contains(currencyCode))
+                {
+                return ValidationResult.Success;
+                }
+
+            return new ValidationResult(FormatErrorMessage(currencyCode));
+            }
         }
-    }
 
 }
 

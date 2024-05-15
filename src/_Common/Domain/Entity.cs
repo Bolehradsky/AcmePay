@@ -1,4 +1,6 @@
-﻿namespace _Common.Domain;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace _Common.Domain;
 
 public abstract class Entity : Entity<Guid>
 {
@@ -23,6 +25,7 @@ public abstract class Entity<TId>
         this.Id = default!;
     }
 
+    [Key]
     public TId Id { get; protected set; }
 
     public override bool Equals(object? obj)

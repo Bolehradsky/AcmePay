@@ -71,24 +71,24 @@ public class Transaction : Entity<Guid>, IAuditable
         TransactionStatusValidation(newStatus.ToString());
         if (transaction.Status != ETransactionStatus.Authorized.ToString())
         {
-            throw new BusinessRuleValidationException($"Transaction is already {transaction.Status.ToString()}");
+            throw new BusinessRuleValidationException($"Transaction is already {transaction.Status}");
         }
         transaction.Status = newStatus.ToString();
         transaction.UpdatedAt = DateTime.Now;
     }
 
 
-    public decimal Amount { get; set; }
-    public string Currency { get; set; } = string.Empty;
-    public string CardHolderNumber { get; set; } = string.Empty;
-    public string CardHolderName { get; set; } = string.Empty;
-    public int ExpirationMonth { get; set; }
-    public int ExpirationYear { get; set; }
-    public int CVV { get; set; }
-    public string OrderReference { get; set; } = string.Empty;
-    public string Status { get; set; } = string.Empty;
+    public decimal Amount { get;  init; }
+    public string Currency { get; init; } = string.Empty;
+    public string CardHolderNumber { get; init; } = string.Empty;
+    public string CardHolderName { get; init; } = string.Empty;
+    public int ExpirationMonth { get;init; }
+    public int ExpirationYear { get; init; }
+    public int CVV { get; init; }
+    public string OrderReference { get; init; } = string.Empty;
+    public string Status { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get;  set; }
 
 
 
@@ -103,7 +103,6 @@ public class Transaction : Entity<Guid>, IAuditable
 
     public static void TransactionStatusValidation(string transactionStatus)
     {
-
         if (EnumValidator.IsStringInEnum<ETransactionStatus>(transactionStatus) == false)
         {
             throw new BusinessRuleValidationException($"Transaction status '{transactionStatus}' does not exist");

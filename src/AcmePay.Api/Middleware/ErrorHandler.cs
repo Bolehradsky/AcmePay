@@ -26,7 +26,6 @@ namespace AcmePay.Api.Midleware
                     BusinessRuleValidationException => (int)HttpStatusCode.BadRequest,
                     DatabaseException => (int)HttpStatusCode.InternalServerError,
                     EntityNotFoundException => (int)HttpStatusCode.NotFound,
-
                     _ => (int)HttpStatusCode.InternalServerError,
                 };
                 var result = JsonSerializer.Serialize(new

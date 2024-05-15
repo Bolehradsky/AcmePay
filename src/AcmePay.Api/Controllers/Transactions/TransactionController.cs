@@ -47,6 +47,7 @@ public class TransactionController : ControllerBase
             OrderReference = request.OrderReference,
         };
         var useCaseResponse = await _sender.Send(useCaseContract);
+       
         return this.Ok(useCaseResponse.Adapt<TransactionChangeStatusResponse>());
     }
 
@@ -66,6 +67,7 @@ public class TransactionController : ControllerBase
             OrderReference = request.OrderReference,
         };
         var useCaseResponse = await _sender.Send(useCaseContract);
+     
         return this.Ok(useCaseResponse.Adapt<TransactionChangeStatusResponse>());
     }
 
@@ -80,6 +82,7 @@ public class TransactionController : ControllerBase
         };
         var useCaseResponse = await _sender.Send(useCaseContract);
         var response = useCaseResponse.Adapt<ReadTransactionsPaginateResponse>();
+        _logger.Log(LogLevel.Information, "hello from controller");
         return this.Ok(response);
     }
 }

@@ -27,8 +27,18 @@ public class AuthorizeTransactionTests
     public async Task CreateAuthorizedTransaction_ThrowsBussinessException_WhenCardHolderNameIsEmpty()
     {
         // Arrange
-        var contract = TransactionAuthorizeRequest.Get;
-        contract.CardHolderName = string.Empty;
+        var contract = new AuthorizeTransaction.Contract
+            {
+            Amount = 1023.12M,
+            Currency = "USD",
+            CardHolderName = "",
+            CardHolderNumber = CreditCardNumbers.GeRandomCreditcard(),
+            ExpirationMonth = 12,
+            ExpirationYear = 2030,
+            CVV = 456,
+            OrderReference = $"Test order reference {DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss")} "
+            };
+       
         var repository = new Mock<ITransactionRepository>().Object;
 
         // Act
@@ -36,6 +46,8 @@ public class AuthorizeTransactionTests
         await Assert.ThrowsAsync<BusinessRuleValidationException>
             (async () => await new AuthorizeTransaction.UseCase(repository).Handle(contract, CancellationToken.None));
     }
-}
+
+   
+    }
 
 

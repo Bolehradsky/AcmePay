@@ -1,5 +1,5 @@
 ﻿namespace AcmePay.Domain.Enums;
-enum ECurrency
+internal enum ECurrency
 {
     USD,
     AUD,

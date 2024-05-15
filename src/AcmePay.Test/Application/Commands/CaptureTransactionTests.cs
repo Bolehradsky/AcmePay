@@ -45,7 +45,7 @@ public class CaptureTransactionTests
 
         var contractCapture = new CaptureTransaction.Contract
         {
-            Id = EncryptGuid.Encrypt(Guid.NewGuid()),
+            Id = EncryptGuid.GetInstance().Encrypt(Guid.NewGuid()),
             OrderReference = contractAuthorize.OrderReference
         };
 
@@ -55,7 +55,7 @@ public class CaptureTransactionTests
     }
 
     [Fact]
-    public async Task CaptureTransaction_ThrowsBussinesRuleValidationException_TransactionStatusIcNotAuthorizedAlreadyCapturedWhenIdInCaptureRequestIsInvalid()
+    public async Task CaptureTransaction_ThrowsBussinesRuleValidationException_WhenTransactionStatusIsAlreadyCaptured()
     {
         // Arrange
         var contractAuthorize = TransactionAuthorizeRequest.Get;

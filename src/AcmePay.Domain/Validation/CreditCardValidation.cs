@@ -1,11 +1,13 @@
 ﻿using _Common.Exceptions;
 using _Common.Utils;
-
+using System.Runtime.CompilerServices;
+[assembly: InternalsVisibleTo("AcmePay.Test")]
 namespace AcmePay.Domain.Validation
-{
-    public static class CreditCardValidation
     {
-        public static void Validate(string cardHolderNumber, string cardHolderName, int expirationMonth, int expirationYear, int cVV)
+    
+    internal static class CreditCardValidation
+    {
+        internal static void Validate(string cardHolderNumber, string cardHolderName, int expirationMonth, int expirationYear, int cVV)
         {
             CreditCardNumberValidation(cardHolderNumber);
 
@@ -73,7 +75,7 @@ namespace AcmePay.Domain.Validation
         {
             if (cvv.ToString().Length != 3)
             {
-                throw new BusinessRuleValidationException("Credit card date has expired");
+                throw new BusinessRuleValidationException("Credit card CVV not invalid");
             }
         }
     }

@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddCommonMapsterProfiles(this IServiceCollection services)
     {
-        TypeAdapterConfig<Guid, string>.NewConfig().MapWith(src => EncryptGuid.Encrypt(src));
+        TypeAdapterConfig<Guid, string>.NewConfig().MapWith(src => EncryptGuid.GetInstance().Encrypt(src));
         TypeAdapterConfig.GlobalSettings.Default.MapToConstructor(true);
 
         return services;

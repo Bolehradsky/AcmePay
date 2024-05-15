@@ -18,7 +18,6 @@ namespace AcmePay.Infrastructure.Repository.Generics
         IDbConnection _connection;
 
 
-
         public DapperGenericRepository(SqlConnectionProvider connectionProvider)
         {
             _connection = connectionProvider.GetConnection();
@@ -30,8 +29,8 @@ namespace AcmePay.Infrastructure.Repository.Generics
             try
             {
                 string tableName = this.GetTableName();
-                string columns = this.GetColumns(excludeKey: true);
-                string properties = this.GetPropertyNames(excludeKey: true);
+                string columns = this.GetColumns(excludeKey: false);
+                string properties = this.GetPropertyNames(excludeKey: false);
                 string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
 
                 rowsEffected = await _connection.ExecuteAsync(query, entity);
@@ -51,7 +50,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
                 string tableName = this.GetTableName();
                 string keyColumn = GetKeyColumnName();
                 string keyProperty = this.GetKeyPropertyName();
-                string query = $"DELETE FROM {tableName} WHERE Id = @{keyProperty}";
+                string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
 
                 rowsEffected = await _connection.ExecuteAsync(query, entity);
             }
@@ -88,8 +87,8 @@ namespace AcmePay.Infrastructure.Repository.Generics
             {
                 string tableName = this.GetTableName();
                 string keyColumn = GetKeyColumnName();
-                string query = $"SELECT * FROM {tableName} WHERE  Id = '{Id}'";
-                result = await _connection.QueryFirstOrDefaultAsync<T>(query, new { Id = Id.ToString() });
+                string query = $"SELECT * FROM {tableName} WHERE  {keyColumn} = '{Id}'";
+                result = await _connection.QueryFirstOrDefaultAsync<T>(query, new {keyColumn = Id.ToString() });
             }
             catch (Exception exception)
             {
@@ -113,16 +112,17 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
                 StringBuilder query = new StringBuilder();
                 query.Append($"UPDATE {tableName} SET ");
-                var properties = typeof(T).GetProperties();
+               // var properties = typeof(T).GetProperties();
+                var properties = typeof(T).GetProperties().Where(x=>x.Name!=keyColumn);
                 foreach (var property in properties)
                 {
-                    if (property.Name == "Id") continue;
+                    if (property.Name == keyColumn) continue;
                     query.Append($"{property.Name} = @{property.Name},");
                 }
 
                 query.Remove(query.Length - 1, 1);
 
-                query.Append($" WHERE Id = @Id");
+                query.Append($" WHERE {keyColumn} = @Id");
 
                 rowsEffected = await _connection.ExecuteAsync(query.ToString(), entity);
             }
@@ -134,7 +134,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
             return rowsEffected > 0 ? true : false;
         }
 
-        private string GetTableName()
+        protected string GetTableName()
         {
             string tableName = "";
             var type = typeof(T);
@@ -148,7 +148,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
             return $"[{type.Name}]";
         }
 
-        public static string? GetKeyColumnName()
+        protected static string? GetKeyColumnName()
         {
             PropertyInfo[] properties = typeof(T).GetProperties();
 
@@ -176,7 +176,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
         }
 
 
-        private string GetColumns(bool excludeKey = false)
+        protected string GetColumns(bool excludeKey = false)
         {
             var type = typeof(T);
             var columns = string.Join(", ", type.GetProperties()
@@ -192,10 +192,10 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
         protected string GetPropertyNames(bool excludeKey = false)
         {
-            var properties = typeof(T).GetProperties();
-
-            //var properties = typeof(T).GetProperties()
-            //    .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
+            var properties1 = typeof(T).GetProperties();
+            var keyName = GetKeyPropertyName();
+            var properties = typeof(T).GetProperties()
+                 .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
 
             var values = string.Join(", ", properties.Select(p =>
             {
@@ -205,7 +205,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
             return values;
         }
 
-        protected IEnumerable<PropertyInfo> GetProperties(bool excludeKey = false)
+        private IEnumerable<PropertyInfo> GetProperties(bool excludeKey = false)
         {
             var properties = typeof(T).GetProperties().ToList()
             .Where(p => !excludeKey || p.GetCustomAttribute<KeyAttribute>() == null);
@@ -220,7 +220,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
             if (properties.Any())
             {
-                return properties.FirstOrDefault().Name;
+                return properties.FirstOrDefault()!.Name;
             }
 
             return null;

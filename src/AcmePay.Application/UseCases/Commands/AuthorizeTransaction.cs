@@ -11,21 +11,21 @@ public static class AuthorizeTransaction
 {
     public sealed record Contract : IRequest<Result>
     {
-        public decimal Amount { get; set; }
-        public string Currency { get; set; } = string.Empty;
-        public string CardHolderNumber { get; set; } = string.Empty;
-        public string CardHolderName { get; set; } = string.Empty;
-        public int ExpirationMonth { get; set; }
-        public int ExpirationYear { get; set; }
-        public int CVV { get; set; }
-        public string OrderReference { get; set; } = string.Empty;
-        public ETransactionStatus Status { get; set; }
+        public decimal Amount { get; init; }
+        public string Currency { get; init; } = string.Empty;
+        public string CardHolderNumber { get; init; } = string.Empty;
+        public string CardHolderName { get; init; } = string.Empty;
+        public int ExpirationMonth { get; init; }
+        public int ExpirationYear { get; init; }
+        public int CVV { get; init; }
+        public string OrderReference { get; init; } = string.Empty;
+        public ETransactionStatus Status { get; init; }
     }
 
     public sealed record Result
     {
         public string Id { get; set; } = string.Empty;
-        public string OrderReference { get; set; } = string.Empty;
+        public string OrderReference { get; init; } = string.Empty;
     }
 
 
@@ -41,7 +41,7 @@ public static class AuthorizeTransaction
         }
 
         public async Task<Result> Handle(Contract contract, CancellationToken cancellationToken)
-        {
+            {
 
             var transaction = Transaction.Create(contract.Amount,
                                                        contract.Currency,
@@ -55,8 +55,9 @@ public static class AuthorizeTransaction
 
             await _transactionRepository.Authorize(transaction);
             var result = transaction.Adapt<Result>();
-            result.Id = EncryptGuid.Encrypt(transaction.Id);
+            result.Id = EncryptGuid.GetInstance().Encrypt(transaction.Id);
+            
             return result;
+            }
         }
     }
-}

@@ -32,7 +32,7 @@ public static class VoidTransaction
 
         public async Task<Result> Handle(Contract contract, CancellationToken cancellationToken)
         {
-            var authorizedTransaction = await _transactionRepository.GetById(EncryptGuid.Decrypt(contract.Id));
+            var authorizedTransaction = await _transactionRepository.GetById(EncryptGuid.GetInstance().Decrypt(contract.Id));
 
             Transaction.UpdateStatus(authorizedTransaction, ETransactionStatus.Voided);
 
@@ -49,7 +49,7 @@ public static class VoidTransaction
             await _transactionRepository.ChangeStatus(authorizedTransaction, voidedTransaction);
             return new Result()
             {
-                Id = EncryptGuid.Encrypt(voidedTransaction.Id),
+                Id = EncryptGuid.GetInstance().Encrypt(voidedTransaction.Id),
                 Status = voidedTransaction.Status
             };
         }

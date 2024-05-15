@@ -22,14 +22,14 @@ public static class ReadTransactions
         }
     }
 
-    public sealed class ReadTransactionResult
+    public sealed record ReadTransactionResult
     {
-        public decimal Amount { get; set; }
-        public string Currency { get; set; } = string.Empty;
-        public string CardHolderNumber { get; set; } = string.Empty;
-        public string CardHolderName { get; set; } = string.Empty;
+        public decimal Amount { get; init; }
+        public string Currency { get; init; } = string.Empty;
+        public string CardHolderNumber { get; init; } = string.Empty;
+        public string CardHolderName { get; init; } = string.Empty;
         public string Id { get; set; } = string.Empty;
-        public string Status { get; set; } = string.Empty;
+        public string Status { get; init; } = string.Empty;
     }
 
     public class UseCase : IRequestHandler<Contract, Result>
@@ -50,7 +50,7 @@ public static class ReadTransactions
             foreach (var item in modelResult.Data)
             {
                 var resultItem = item.Adapt<ReadTransactionResult>();
-                resultItem.Id = EncryptGuid.Encrypt(item.Id);
+                resultItem.Id = EncryptGuid.GetInstance().Encrypt(item.Id);
                 resultData.Add(resultItem);
             }
 
