@@ -56,8 +56,7 @@ public class EncryptGuid
         {
         lock (_locker)
             {
-            encryptedGuid = encryptedGuid.Replace("%2B", "+");
-            encryptedGuid = encryptedGuid.Replace("%2F", "/");
+            encryptedGuid = encryptedGuid.Replace("%2B", "+").Replace("%2F", "/");
 
             using (Aes aesAlg = Aes.Create())
                 {

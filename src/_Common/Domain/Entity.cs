@@ -2,17 +2,6 @@
 
 namespace _Common.Domain;
 
-public abstract class Entity : Entity<Guid>
-{
-    protected Entity(Guid id) : base(id)
-    {
-    }
-
-    protected Entity()
-    {
-    }
-}
-
 public abstract class Entity<TId>
 {
     protected Entity(TId id)

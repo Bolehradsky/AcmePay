@@ -1,4 +1,5 @@
 ﻿using _Common.Exceptions;
+using AcmePay.Domain.Validation;
 
 namespace AcmePay.Test.Domain.Validation
 {
@@ -13,7 +14,7 @@ namespace AcmePay.Test.Domain.Validation
         public void TransactionStatusValidation_Succeed(string transactionStatus)
         {
             // Act
-            var exception = Record.Exception(() => AcmePay.Domain.Model.Transaction.TransactionStatusValidation(transactionStatus));
+            var exception = Record.Exception(() => TransactionValidation.TransactionStatusValidation(transactionStatus));
 
             // Assert
             Assert.Null(exception);
@@ -26,7 +27,7 @@ namespace AcmePay.Test.Domain.Validation
             var transactionStatus = "NotExist";
 
             // Act
-            var validateAction = () => AcmePay.Domain.Model.Transaction.TransactionStatusValidation(transactionStatus);
+            var validateAction = () => TransactionValidation.TransactionStatusValidation(transactionStatus);
 
             // Assert
             Assert.Throws<BusinessRuleValidationException>(validateAction);

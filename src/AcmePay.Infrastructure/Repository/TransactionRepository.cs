@@ -38,14 +38,21 @@ public class TransactionRepository : DapperGenericRepository<Transaction, Guid>,
         {
             try
             {
-
                 string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
-                await connection.ExecuteAsync(query, changedTransaction, dbTransaction);
-                                
+                var rowsAffected = await connection.ExecuteAsync(query, changedTransaction, dbTransaction);
+                if (rowsAffected == 0)
+                    {
+                    throw new Exception($"Inserting  {changedTransaction.Status} transaction error");
+                    }
+
                 query = $"UPDATE {tableName}  SET Status=@Status,UpdatedAt=@UpdatedAt " +
                                              $"WHERE {keyColumn} = @{keyProperty}";
-                
-                await connection.ExecuteAsync(query, originalTransaction, dbTransaction);
+
+                rowsAffected = await connection.ExecuteAsync(query, originalTransaction, dbTransaction);
+                if (rowsAffected == 0)
+                    {
+                    throw new Exception($"Update authorized to {changedTransaction.Status} error");
+                    }
 
                 dbTransaction.Commit();
             }

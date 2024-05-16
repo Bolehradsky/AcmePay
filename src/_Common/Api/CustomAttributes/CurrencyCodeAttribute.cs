@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace _Common.Api.CustomAttributes
-{
+    {
     [AttributeUsage(AttributeTargets.Property)]
     public class CurrencyCodeAttribute : ValidationAttribute
-    {
+        {
         private static readonly string[] ValidCurrencyCodes =
         {
         "USD",
@@ -21,7 +21,6 @@ namespace _Common.Api.CustomAttributes
             {
             var currencyCode = value?.ToString()?.ToUpperInvariant();
 
-
             if (ValidCurrencyCodes.Contains(currencyCode))
                 {
                 return ValidationResult.Success;
@@ -31,5 +30,5 @@ namespace _Common.Api.CustomAttributes
             }
         }
 
-}
+    }
 

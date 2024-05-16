@@ -2,7 +2,8 @@
 using _Common.Validation;
 using AcmePay.Domain.Enums;
 using System.Runtime.CompilerServices;
-[assembly: InternalsVisibleTo("AcmePay.Test")]
+
+
 
 namespace AcmePay.Domain.Validation;
 

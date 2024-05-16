@@ -1,15 +1,13 @@
-﻿namespace _Common.Exceptions
+﻿namespace _Common.Exceptions;
+
+public class EntityNotFoundException : Exception
 {
-
-    public class EntityNotFoundException : Exception
+    public EntityNotFoundException() : base()
     {
-        public EntityNotFoundException() : base()
-        {
-        }
+    }
 
-        public EntityNotFoundException(string message) :
-            base(message)
-        {
-        }
+    public EntityNotFoundException(string message) :
+        base(message)
+    {
     }
 }

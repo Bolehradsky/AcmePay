@@ -14,7 +14,7 @@ namespace AcmePay.Infrastructure.Queries
             _connectionProvider = connectionProvider;
         }
 
-        public async Task<ReadTransactionsModel.ResponseModel> Execute(ReadTransactionsModel.RequestModel request, CancellationToken cancellationToken = default)
+        public async Task<ResponseModel> Execute(RequestModel request, CancellationToken cancellationToken = default)
         {
 
             int skip = (request!.PaginationRequest.CurrentPage - 1) * request.PaginationRequest.PageSize;
@@ -27,9 +27,9 @@ namespace AcmePay.Infrastructure.Queries
             var result = await connection.QueryMultipleAsync(sql, new { Skip = skip, Take = take });
 
             int totalCount = result.Read<int>().FirstOrDefault();
-            List<ReadTransactionsModel.ReadTransactionModel> data = result.Read<ReadTransactionsModel.ReadTransactionModel>().ToList();
+            List<ReadTransactionModel> data = result.Read<ReadTransactionModel>().ToList();
 
-            return new ReadTransactionsModel.ResponseModel(totalCount, request.PaginationRequest.PageSize, request.PaginationRequest.CurrentPage, data);
+            return new ResponseModel(totalCount, request.PaginationRequest.PageSize, request.PaginationRequest.CurrentPage, data);
 
 
         }

@@ -25,7 +25,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
         public async Task<bool> Add(T entity)
         {
-            int rowsEffected = 0;
+            int rowsAffected = 0;
             try
             {
                 string tableName = this.GetTableName();
@@ -33,18 +33,18 @@ namespace AcmePay.Infrastructure.Repository.Generics
                 string properties = this.GetPropertyNames(excludeKey: false);
                 string query = $"INSERT INTO {tableName} ({columns}) VALUES ({properties})";
 
-                rowsEffected = await _connection.ExecuteAsync(query, entity);
+                rowsAffected = await _connection.ExecuteAsync(query, entity);
             }
             catch (Exception exception)
             {
                 throw new DatabaseException($"{MethodBase.GetCurrentMethod()} method exception: {exception.Message}");
             }
-            return rowsEffected > 0 ? true : false;
+            return rowsAffected > 0 ? true : false;
         }
 
         public async Task<bool> Delete(T entity)
         {
-            int rowsEffected = 0;
+            int rowsAffected = 0;
             try
             {
                 string tableName = this.GetTableName();
@@ -52,14 +52,18 @@ namespace AcmePay.Infrastructure.Repository.Generics
                 string keyProperty = this.GetKeyPropertyName();
                 string query = $"DELETE FROM {tableName} WHERE {keyColumn} = @{keyProperty}";
 
-                rowsEffected = await _connection.ExecuteAsync(query, entity);
-            }
+                rowsAffected = await _connection.ExecuteAsync(query, entity);
+                if (rowsAffected == 0)
+                    {
+                    throw new Exception($"Delete record in {tableName} error");
+                    }
+                }
             catch (Exception exception)
             {
                 throw new DatabaseException($"{MethodBase.GetCurrentMethod()} method exception: {exception.Message}");
             }
 
-            return rowsEffected > 0 ? true : false;
+            return rowsAffected > 0 ? true : false;
         }
 
         public IEnumerable<T> GetAll()
@@ -103,7 +107,7 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
         public async Task<bool> Update(T entity)
         {
-            int rowsEffected = 0;
+            int rowsAffected = 0;
             try
             {
                 string tableName = this.GetTableName();
@@ -124,14 +128,18 @@ namespace AcmePay.Infrastructure.Repository.Generics
 
                 query.Append($" WHERE {keyColumn} = @Id");
 
-                rowsEffected = await _connection.ExecuteAsync(query.ToString(), entity);
-            }
+                rowsAffected = await _connection.ExecuteAsync(query.ToString(), entity);
+                if (rowsAffected == 0)
+                    {
+                    throw new Exception($"Update record in {tableName} error");
+                    }
+                }
             catch (Exception exception)
             {
                 throw new DatabaseException($"{MethodBase.GetCurrentMethod()} method exception: {exception.Message}");
             }
 
-            return rowsEffected > 0 ? true : false;
+            return rowsAffected > 0 ? true : false;
         }
 
         protected string GetTableName()

@@ -44,7 +44,7 @@ public static class ReadTransactions
         public async Task<Result> Handle(Contract contract, CancellationToken cancellation)
         {
             var modelRequest = contract.Adapt<RequestModel>();
-            var modelResult = await _readTransactionsQuery.Execute(modelRequest);
+            var modelResult = await _readTransactionsQuery.Execute(modelRequest,cancellation);
 
             var resultData = new List<ReadTransactionResult>();
             foreach (var item in modelResult.Data)
