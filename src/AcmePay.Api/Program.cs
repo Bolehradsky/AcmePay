@@ -4,6 +4,7 @@ using AcmePay.Application.DependencyInjection;
 using AcmePay.Infrastructure.DependencyInjection;
 using Serilog;
 // hello world
+// komrntar 2 na dev-u
 
 var builder = WebApplication.CreateBuilder(args);
 
