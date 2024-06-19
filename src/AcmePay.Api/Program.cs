@@ -4,7 +4,7 @@ using AcmePay.Application.DependencyInjection;
 using AcmePay.Infrastructure.DependencyInjection;
 using Serilog;
 // hello world
-
+// 2nd hello
 var builder = WebApplication.CreateBuilder(args);
 
 try
