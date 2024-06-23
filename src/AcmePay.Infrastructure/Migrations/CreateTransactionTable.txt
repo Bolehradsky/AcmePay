@@ -1,0 +1,26 @@
+﻿
+USE [acme01]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Transaction](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Currency] [nvarchar](3) NOT NULL,
+	[Amount] [decimal](18, 2) NOT NULL,
+	[CardHolderName] [varchar](50) NOT NULL,
+	[CardHolderNumber] [nchar](25) NOT NULL,
+	[ExpirationMonth] [smallint] NOT NULL,
+	[ExpirationYear] [smallint] NOT NULL,
+	[Cvv] [smallint] NOT NULL,
+	[OrderReference] [varchar](50) NULL,
+	[Status] [varchar](25) NULL,
+	[CreatedAt] [datetime] NULL,
+	[UpdatedAt] [datetime] NULL,
+ CONSTRAINT [PK_Transaction] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
